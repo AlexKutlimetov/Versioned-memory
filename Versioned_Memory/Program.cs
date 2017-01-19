@@ -15,7 +15,9 @@ namespace Versioned_Memory
             q.Enqueue(2);
             q.Enqueue(3);
 
-            Console.WriteLine(q.ToString());
+            foreach (int el in q) {
+                Console.WriteLine(el.ToString());
+            }
 
         }
     }

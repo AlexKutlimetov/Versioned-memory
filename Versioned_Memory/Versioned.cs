@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 namespace Versioned_Memory
 {
-    class Versioned
+    public class Versioned
     {
-        internal void Release(Segment release);
-        internal void Collapse(Revision main, Segment parent);
-        internal void Merge(Revision main, Revision joinRev, Segment join);
+        internal void Release(Segment release) {}
+        internal void Collapse(Revision main, Segment parent) {} 
+        internal void Merge(Revision main, Revision joinRev, Segment join) {}
     }
 
     public class Versioned<T> : Versioned
     {
-        SortedDictionary<int, T> versions;
+        internal Versioned()
+        {
+            versions = new SortedDictionary<int, T>();
+        }
 
-        public T Get() { return Get(Revision.currentRevision); }
-        public void Set(T v) { Set(Revision.currentRevision, v);}
+        internal SortedDictionary<int, T> versions;
+
+        public T Get() { return Get(Revision.currentRevision.Value); }
+        public void Set(T v) { Set(Revision.currentRevision.Value, v);}
 
         T Get(Revision r)
         {

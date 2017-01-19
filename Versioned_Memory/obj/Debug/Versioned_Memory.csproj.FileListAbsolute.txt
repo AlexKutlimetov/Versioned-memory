@@ -1,2 +1,7 @@
 F:\Users\Eren&Cigdem\Desktop\Проекты\Versioned_Memory\Versioned_Memory\bin\Debug\Versioned_Memory.exe.config
 C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.exe.config
+C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.csprojResolveAssemblyReference.cache
+C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.exe
+C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.pdb
+C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.exe
+C:\Users\1\Documents\GitHub\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.pdb

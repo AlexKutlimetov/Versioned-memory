@@ -12,13 +12,14 @@ namespace Versioned_Memory
         internal Segment root;
         internal Segment current;
         Task task;
-        //ThreadLocal<Revision> currentRevision;
-        [ThreadStatic] internal static Revision currentRevision;
+        internal static ThreadLocal<Revision> currentRevision;
 
-        Revision(Segment root, Segment current)
+        internal Revision(Segment root, Segment current)
         {
             this.root = root;
             this.current = current;
+            currentRevision = new ThreadLocal<Revision>(() => { return this; });
+            currentRevision.Value = this;
         }
 
         public Revision Fork(Action action)
@@ -27,12 +28,12 @@ namespace Versioned_Memory
             r = new Revision(current, new Segment(current));
             current.Release();
             current = new Segment(current);
-            task = Task.Factory.StartNew(delegate()
+            task = Task.Run(delegate()
             {
-                Revision previous = currentRevision;
-                currentRevision = r;
+                Revision previous = currentRevision.Value;
+                currentRevision.Value = r;
                 try { action(); }
-                finally { currentRevision = previous; }
+                finally { currentRevision.Value = previous; }
 
             }
             );

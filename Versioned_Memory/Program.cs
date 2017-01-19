@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+
 
 namespace Versioned_Memory
 {
@@ -6,6 +8,15 @@ namespace Versioned_Memory
     {
         static void Main(string[] args)
         {
+
+            VersionedQ<int> q = new VersionedQ<int>();
+
+            q.Enqueue(1);
+            q.Enqueue(2);
+            q.Enqueue(3);
+
+            Console.WriteLine(q.ToString());
+
         }
     }
 }

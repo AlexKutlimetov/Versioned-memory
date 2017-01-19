@@ -15,9 +15,20 @@ namespace Versioned_Memory
             q.Enqueue(2);
             q.Enqueue(3);
 
-            foreach (int el in q) {
+            foreach (int el in q)
+            {
                 Console.WriteLine(el.ToString());
             }
+
+            q.Clear();
+
+            Console.WriteLine(q.Count.ToString());
+
+            //Versioned<int> x = new Versioned<int>();
+            //x.Set(3);
+
+            //Console.WriteLine(x.ToString());
+
 
         }
     }

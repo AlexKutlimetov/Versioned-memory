@@ -51,7 +51,7 @@ namespace Versioned_Memory
         public void Clear()
         {
             Revision newRev = mainRev.Fork( delegate() { base.Clear(); });
-            mainRev.Join(newRev);
+            newRev.Join(mainRev);
         }
 
         //public T Dequeue()
@@ -62,10 +62,11 @@ namespace Versioned_Memory
         //    return value;
         //}
 
-        //public void Enqueue(T item)
-        //{
-
-        //}
+        public void Enqueue(T item)
+        {
+            Revision newRev = mainRev.Fork(delegate() { base.Enqueue(item); });
+            newRev.Join(mainRev);
+        }
 
     }
 }

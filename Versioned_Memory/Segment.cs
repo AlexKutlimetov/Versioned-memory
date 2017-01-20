@@ -22,7 +22,7 @@ namespace Versioned_Memory
                 parent.refcount++;
             }
             written = new List<Versioned>();
-            version = versionCount;
+            version = versionCount++;
             refcount = 1;
         }
 

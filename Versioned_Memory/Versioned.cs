@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 
 namespace Versioned_Memory
 {
-    public class Versioned
+ 
+    internal class Versioned
     {
-        internal void Release(Segment release) {}
-        internal void Collapse(Revision main, Segment parent) {} 
-        internal void Merge(Revision main, Revision joinRev, Segment join) {}
+        internal void Release(Segment release) { }
+        internal void Collapse(Revision main, Segment parent) { }
+        internal void Merge(Revision main, Revision joinRev, Segment join) { }
     }
 
-    public class Versioned<T> : Versioned
+
+
+    internal class Versioned<T> : Versioned
     {
         internal Versioned()
         {
@@ -22,21 +25,21 @@ namespace Versioned_Memory
 
         internal SortedDictionary<int, T> versions;
 
-        public T Get() { return Get(Revision.currentRevision.Value); }
-        public void Set(T v) { Set(Revision.currentRevision.Value, v);}
+        internal T Get() { return Get(Revision.currentRevision.Value); }
+        internal void Set(T v) { Set(Revision.currentRevision.Value, v); }
 
-        T Get(Revision r)
+        protected T Get(Revision r)
         {
             Segment s = r.current;
             T value;
-            while (versions.TryGetValue(s.version, out value) == false) 
+            while (versions.TryGetValue(s.version, out value) == false)
             {
                 s = s.parent;
             }
             return value;
         }
 
-        void Set(Revision r, T value)
+        protected void Set(Revision r, T value)
         {
             T v;
             if (versions.TryGetValue(r.current.version, out v) == false)
@@ -65,11 +68,11 @@ namespace Versioned_Memory
         {
             Segment s = joinRef.current;
             T v;
-            while (versions.TryGetValue(s.version, out v) == false) 
+            while (versions.TryGetValue(s.version, out v) == false)
             {
                 s = s.parent;
             }
-            if (s == join) 
+            if (s == join)
             {
                 Set(main, versions[join.version]);
             }

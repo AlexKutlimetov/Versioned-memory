@@ -6,66 +6,109 @@ using System.Threading.Tasks;
 
 namespace Versioned_Memory
 {
-    class VersionedQ<T> : Queue<T>
+    class VersionedQ<T> : Versioned<T>
     {
-        Versioned<Queue<T>> versQ;
+
+        private Queue<T> myQ;
 
         List<Revision> revisions;
 
         Revision mainRev;
 
+        internal SortedDictionary<int, Queue<T>> versions;
+
         public VersionedQ() : base()
         {
-            versQ = new Versioned<Queue<T>>();
+
+            myQ = new Queue<T>();
 
             Segment parent = new Segment(null);
             mainRev = new Revision(parent, new Segment(parent));
 
-            Queue<T> test_Q = new Queue<T>();
-            versQ.Set(test_Q);
+            this.versions = new SortedDictionary<int, Queue<T>>();
+
+            Set(myQ);
         }
 
-        public VersionedQ(IEnumerable<T> collection) : base(collection)
+        public VersionedQ(IEnumerable<T> collection)
         {
-            versQ = new Versioned<Queue<T>>();
+
+            myQ = new Queue<T>(collection);
             
             Segment parent = new Segment(null);
             mainRev = new Revision(parent, new Segment(parent));
 
-            Queue<T> test_Q = new Queue<T>(collection);
-            versQ.Set(test_Q);
+            this.versions = new SortedDictionary<int, Queue<T>>();
+            Set(myQ);
         }
 
-        public VersionedQ(int capacity) : base(capacity)
+        public VersionedQ(int capacity)
         {
-            versQ = new Versioned<Queue<T>>();
+
+            myQ = new Queue<T>(capacity);
 
             Segment parent = new Segment(null);
             mainRev = new Revision(parent, new Segment(parent));
-            
 
-            Queue<T> test_Q = new Queue<T>(capacity);
-            versQ.Set(test_Q);
+            this.versions = new SortedDictionary<int, Queue<T>>();
+            Set(myQ);
         }
 
         public void Clear()
         {
-            Revision newRev = mainRev.Fork( delegate() { base.Clear(); });
+            Revision newRev = mainRev.Fork( delegate() { myQ.Clear(); });
             newRev.Join(mainRev);
         }
 
-        //public T Dequeue()
-        //{
+        internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); }
 
-        //    T value = new ;
+        protected void Set(Revision r, Queue<T> value)
+        {
+            Queue<T> v;
+            if (versions.TryGetValue(r.current.version, out v) == false)
+            {
+                r.current.written.Add(this);
+            }
+            versions[r.current.version] = value;
+        }
 
-        //    return value;
-        //}
+        internal Queue<T> Get() { return Get(Revision.currentRevision.Value); }
+
+        protected Queue<T> Get(Revision r)
+        {
+            Segment s = r.current;
+            Queue<T> value;
+            while (versions.TryGetValue(s.version, out value) == false)
+            {
+                s = s.parent;
+            }
+            return value;
+        }
+
+        public Queue<T> Elements()
+        {
+            return myQ;
+        }
+
 
         public void Enqueue(T item)
         {
-            Revision newRev = mainRev.Fork(delegate() { base.Enqueue(item); });
-            newRev.Join(mainRev);
+            Revision newRev = mainRev.Fork(delegate() { myQ.Enqueue(item); Set(myQ);});
+            mainRev.Join(newRev);
+        }
+
+        internal void Merge(Revision main, Revision joinRef, Segment join)
+        {
+            Segment s = joinRef.current;
+            Queue<T> v;
+            while (versions.TryGetValue(s.version, out v) == false)
+            {
+                s = s.parent;
+            }
+            if (s == join)
+            {
+                Set(main, versions[join.version]);
+            }
         }
 
     }

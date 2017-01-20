@@ -32,7 +32,10 @@ namespace Versioned_Memory
             {
                 Revision previous = currentRevision.Value;
                 currentRevision.Value = r;
-                try { action(); }
+                try 
+                { 
+                    action();
+                }
                 finally { currentRevision.Value = previous; }
 
             }
@@ -46,7 +49,8 @@ namespace Versioned_Memory
         {
             try
             {
-                join.task.Wait();
+                if (join.task != null)
+                    join.task.Wait();
                 Segment s = join.current;
                 while (s != join.root)
                 {

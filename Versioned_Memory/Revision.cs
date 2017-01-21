@@ -28,7 +28,7 @@ namespace Versioned_Memory
             r = new Revision(current, new Segment(current));
             current.Release();
             current = new Segment(current);
-            task = Task.Run( () =>
+            r.task = Task.Run( () =>
             {
                 Revision previous = currentRevision.Value;
                 currentRevision.Value = r;
@@ -40,6 +40,7 @@ namespace Versioned_Memory
 
             }
             );
+            //task.Wait();
 
             return r;
 

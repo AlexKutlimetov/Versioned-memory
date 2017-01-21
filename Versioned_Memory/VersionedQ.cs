@@ -56,7 +56,7 @@ namespace Versioned_Memory
 
         public void Clear()
         {
-            Revision newRev = mainRev.Fork( delegate() { myQ.Clear(); });
+            Revision newRev = mainRev.Fork(delegate() { myQ.Clear(); Set(myQ); });
             newRev.Join(mainRev);
         }
 
@@ -95,6 +95,61 @@ namespace Versioned_Memory
         {
             Revision newRev = mainRev.Fork(delegate() { myQ.Enqueue(item); Set(myQ);});
             mainRev.Join(newRev);
+        }
+
+        public bool Dequeue(out T value)
+        {
+            T v = default(T);
+            bool rval = true;
+            Revision newRev = mainRev.Fork( delegate()
+            {
+                rval = tryGet(out v);
+                if (rval)
+                {
+                    Set(myQ);
+                }
+            });
+
+            if (rval)
+            {
+                mainRev.Join(newRev);
+            }
+
+            value = v;
+            return rval;
+        }
+
+        private bool tryGet(out T value)
+        {
+            if (myQ.Count == 0)
+            {
+                value = default(T);
+                return false;
+            }
+            else
+            {
+                value = myQ.Dequeue();
+                return true;
+            }
+        }
+
+        public bool Peek(out T value)
+        {
+            return tryPeek(out value);
+        }
+
+        private bool tryPeek(out T value)
+        {
+            if (myQ.Count == 0)
+            {
+                value = default(T);
+                return false;
+            }
+            else
+            {
+                value = myQ.Peek();
+                return true;
+            }
         }
 
         internal void Merge(Revision main, Revision joinRef, Segment join)

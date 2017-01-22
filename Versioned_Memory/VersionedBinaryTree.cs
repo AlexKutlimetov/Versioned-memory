@@ -176,5 +176,52 @@ namespace Versioned_Memory
             return rval;
         }
 
+        internal void Merge(Revision main, Revision joinRef, Segment join)
+        {
+            BinaryTree<T> A, B, C;
+            A = new BinaryTree<T>(GetSeg(joinRef.root));
+            B = new BinaryTree<T>(GetSeg(joinRef.current));
+            C = new BinaryTree<T>(GetSeg(main.current));
+
+            T[] a = default(T[]), b = default(T[]), c = default(T[]);
+
+            A.CopyTo(a, 0);
+            B.CopyTo(b, 0);
+            C.CopyTo(c, 0);
+
+            var z = new T[c.Length + b.Length];
+            C.CopyTo(z, 0);
+            B.CopyTo(z, c.Length);
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                int index = Array.IndexOf(z, a[i]);
+                if (index > -1)
+                {
+                    z = z.Where((val, idx) => idx != index).ToArray();
+                }
+            }
+
+            BinaryTree<T> BTree = new BinaryTree<T>();
+
+            foreach (var el in z)
+            {
+                BTree.Add(el);
+            }
+
+            Set(main, BTree);
+        }
+
+        protected BinaryTree<T> GetSeg(Segment cur)
+        {
+            Segment s = cur;
+            BinaryTree<T> value;
+            while (versions.TryGetValue(s.version, out value) == false)
+            {
+                s = s.parent;
+            }
+            return value;
+        }
+
     }
 }

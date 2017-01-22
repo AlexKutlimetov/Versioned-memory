@@ -14,3 +14,6 @@ F:\Users\Eren&Cigdem\Desktop\Проекты\Versioned_Memory\Versioned-memory\Ve
 F:\Git\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.exe.config
 F:\Git\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.exe
 F:\Git\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.pdb
+F:\Git\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.exe
+F:\Git\Versioned-memory\Versioned_Memory\bin\Debug\Versioned_Memory.pdb
+F:\Git\Versioned-memory\Versioned_Memory\obj\Debug\Versioned_Memory.csprojResolveAssemblyReference.cache

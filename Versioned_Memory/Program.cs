@@ -185,7 +185,7 @@ namespace Versioned_Memory
 
     }*/
 
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -222,6 +222,52 @@ namespace Versioned_Memory
 
             Console.WriteLine("Total elements in queue: " + q.Elements().Count);
             foreach (int el in q.Elements())
+            {
+                Console.WriteLine(el.ToString()); //test
+            }
+        }
+    }*/
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            VersionedBinaryTree<int> BTree = new VersionedBinaryTree<int>();
+
+            Random rnd = new Random((int)Stopwatch.GetTimestamp());
+            Task t1 = Task.Factory.StartNew(() =>
+            {
+
+                for (int i = 0; i < 10; i++)
+                {
+
+                    int ts = rnd.Next(100, 200);
+                    Thread.Sleep(ts);
+                    BTree.Add(i);
+                    Console.WriteLine("{0} add 1", i);
+                }
+            });
+
+            Task t2 = Task.Factory.StartNew(() =>
+            {
+
+                for (int i = 1; i < 11; i++)
+                {
+                    int ts = rnd.Next(10, 150);
+                    Thread.Sleep(ts);
+                    BTree.Add(i*10);
+                    Console.WriteLine("{0} add 2", i * 10);
+                }
+            });
+
+            t1.Wait();
+            t2.Wait();
+
+            var btree = new int[BTree.Count()];
+            BTree.CopyTo(btree, 0);
+
+            Console.WriteLine("Total elements in queue: " + btree.Length);
+            foreach (int el in btree)
             {
                 Console.WriteLine(el.ToString()); //test
             }

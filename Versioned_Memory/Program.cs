@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 
 namespace Versioned_Memory
@@ -189,9 +191,9 @@ namespace Versioned_Memory
     {
         static void Main(string[] args)
         {
-            VersionedStack<int> q = new VersionedStack<int>();
+            VersionedQ<int> q = new VersionedQ<int>();
 
-            Random rnd = new Random((int)Stopwatch.GetTimestamp());
+            Random rnd = new Random(Guid.NewGuid().GetHashCode());
             Task t1 = Task.Factory.StartNew(() =>
             {
 
@@ -200,7 +202,7 @@ namespace Versioned_Memory
 
                     int ts = rnd.Next(100, 200);
                     Thread.Sleep(ts);
-                    q.Push(i);
+                    q.Enqueue(i);
                     Console.WriteLine("{0} add 1", i);
                 }
             });
@@ -212,9 +214,17 @@ namespace Versioned_Memory
                 {
                     int ts = rnd.Next(10, 150);
                     Thread.Sleep(ts);
-                    q.Push(i * 10);
-                    Console.WriteLine("{0} add 2", i*10);
+                    //q.Enqueue(i * 10);
+                    int a;
+                    q.Dequeue(out a);
+                   // Console.WriteLine("{0} add 2", i * 10);
+                    Console.WriteLine("Delete");
                 }
+
+                //Thread.Sleep(700);
+                //q.Clear();
+                //Console.WriteLine("Clear");
+
             });
 
             t1.Wait();
@@ -225,6 +235,13 @@ namespace Versioned_Memory
             {
                 Console.WriteLine(el.ToString()); //test
             }
+            //Stack<int> numbers = new Stack<int>();
+            //numbers.Push(1);
+            //numbers.Push(2);
+            //foreach (var n in numbers.ToArray())
+            //{
+            //    Console.WriteLine(n.ToString());
+            //}
         }
     }
 

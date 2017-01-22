@@ -40,6 +40,7 @@ namespace Versioned_Memory
 
             }
             );
+            //task.Wait();
 
             return r;
 

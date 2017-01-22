@@ -8,7 +8,6 @@ namespace Versioned_Memory
 {
     class VersionedQ<T> : Versioned<T>
     {
-
         private Queue<T> myQ;
 
         List<Revision> revisions;
@@ -17,7 +16,7 @@ namespace Versioned_Memory
 
         internal SortedDictionary<int, Queue<T>> versions;
 
-        public VersionedQ() : base()
+        public VersionedQ()
         {
 
             myQ = new Queue<T>();
@@ -90,8 +89,12 @@ namespace Versioned_Memory
             return myQ;
         }
 
+<<<<<<< HEAD
 
         public void Enqueue(T item) //добавляет элемент в конец
+=======
+        public void Enqueue(T item)
+>>>>>>> 6893d3ee9033ede67c411abe5ad6a90c19e63b79
         {
             Revision newRev = mainRev.Fork(delegate() { myQ.Enqueue(item); Set(myQ);});
             mainRev.Join(newRev);
@@ -166,5 +169,18 @@ namespace Versioned_Memory
             }
         }
 
+        public T[] ToArray()
+        {
+            T[] rval = null;
+            Revision newRev = mainRev.Fork(delegate() { rval = myQ.ToArray(); });
+            mainRev.Join(newRev);
+            return rval;
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            Revision newRev = mainRev.Fork(delegate() { myQ.CopyTo(array, arrayIndex); });
+            mainRev.Join(newRev);
+        }
     }
 }

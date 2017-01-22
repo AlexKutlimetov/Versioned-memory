@@ -63,7 +63,7 @@
     <Compile Include="VersionedStack.cs" />
     <Compile Include="Versioned.cs" />
     <Compile Include="VersionedQ.cs" />
-    <Compile Include="VersionedSet.cs" />
+    <Compile Include="VersionedHashSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

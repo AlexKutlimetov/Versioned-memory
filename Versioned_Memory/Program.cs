@@ -162,7 +162,7 @@ namespace Versioned_Memory
             Console.WriteLine("Total elements in queue: " + q.Elements().Count);
             foreach (int el in q.Elements())
             {
-                Console.WriteLine(el.ToString());
+                Console.WriteLine(el.ToString()); //test
             }
         }
     }

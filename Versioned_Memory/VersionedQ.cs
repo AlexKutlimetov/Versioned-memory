@@ -60,7 +60,7 @@ namespace Versioned_Memory
             newRev.Join(mainRev);
         }
 
-        internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); }
+        internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); } //добавляет очередь в текущую ревизию
 
         protected void Set(Revision r, Queue<T> value)
         {
@@ -72,9 +72,9 @@ namespace Versioned_Memory
             versions[r.current.version] = value;
         }
 
-        internal Queue<T> Get() { return Get(Revision.currentRevision.Value); }
+        internal Queue<T> Get() { return Get(Revision.currentRevision.Value); } //возвращает очередь текущей ревизии, т.е. текущую версию
 
-        protected Queue<T> Get(Revision r)
+        protected Queue<T> Get(Revision r) 
         {
             Segment s = r.current;
             Queue<T> value;
@@ -85,19 +85,19 @@ namespace Versioned_Memory
             return value;
         }
 
-        public Queue<T> Elements()
+        public Queue<T> Elements() //возвращает всю очередь
         {
             return myQ;
         }
 
 
-        public void Enqueue(T item)
+        public void Enqueue(T item) //добавляет элемент в конец
         {
             Revision newRev = mainRev.Fork(delegate() { myQ.Enqueue(item); Set(myQ);});
             mainRev.Join(newRev);
         }
 
-        public bool Dequeue(out T value)
+        public bool Dequeue(out T value) //берет первый элемент очереди и удаляет
         {
             T v = default(T);
             bool rval = true;
@@ -119,7 +119,7 @@ namespace Versioned_Memory
             return rval;
         }
 
-        private bool tryGet(out T value)
+        private bool tryGet(out T value) //пытаемся взять элемент
         {
             if (myQ.Count == 0)
             {
@@ -133,12 +133,12 @@ namespace Versioned_Memory
             }
         }
 
-        public bool Peek(out T value)
+        public bool Peek(out T value) //смотрит первый элемент очереди
         {
             return tryPeek(out value);
         }
 
-        private bool tryPeek(out T value)
+        private bool tryPeek(out T value) //пытается посмотреть первый элемент очереди
         {
             if (myQ.Count == 0)
             {
@@ -152,7 +152,7 @@ namespace Versioned_Memory
             }
         }
 
-        internal void Merge(Revision main, Revision joinRef, Segment join)
+        internal void Merge(Revision main, Revision joinRef, Segment join) //нахдим последнее изменение переменной и записываем его
         {
             Segment s = joinRef.current;
             Queue<T> v;

@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace Versioned_Memory
 {
-    class VersionedQ<T> : Versioned<T>
+    class VersionedQ<T> : Versioned<Queue<T>>
     {
         private Queue<T> myQ;
 
-        List<Revision> revisions;
-
         Revision mainRev;
-
-        internal SortedDictionary<int, Queue<T>> versions;
 
         public VersionedQ()
         {
@@ -59,30 +55,30 @@ namespace Versioned_Memory
             newRev.Join(mainRev);
         }
 
-        internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); }
+        //internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); }
 
-        protected void Set(Revision r, Queue<T> value)
-        {
-            Queue<T> v;
-            if (versions.TryGetValue(r.current.version, out v) == false)
-            {
-                r.current.written.Add(this);
-            }
-            versions[r.current.version] = value;
-        }
+        //protected void Set(Revision r, Queue<T> value)
+        //{
+        //    Queue<T> v;
+        //    if (versions.TryGetValue(r.current.version, out v) == false)
+        //    {
+        //        r.current.written.Add(this);
+        //    }
+        //    versions[r.current.version] = value;
+        //}
 
-        internal Queue<T> Get() { return Get(Revision.currentRevision.Value); }
+        //internal Queue<T> Get() { return Get(Revision.currentRevision.Value); }
 
-        protected Queue<T> Get(Revision r)
-        {
-            Segment s = r.current;
-            Queue<T> value;
-            while (versions.TryGetValue(s.version, out value) == false)
-            {
-                s = s.parent;
-            }
-            return value;
-        }
+        //protected Queue<T> Get(Revision r)
+        //{
+        //    Segment s = r.current;
+        //    Queue<T> value;
+        //    while (versions.TryGetValue(s.version, out value) == false)
+        //    {
+        //        s = s.parent;
+        //    }
+        //    return value;
+        //}
 
         public Queue<T> Elements()
         {
@@ -108,10 +104,7 @@ namespace Versioned_Memory
                 }
             });
 
-            if (rval)
-            {
-                mainRev.Join(newRev);
-            }
+            mainRev.Join(newRev);
 
             value = v;
             return rval;

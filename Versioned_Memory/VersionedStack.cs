@@ -6,18 +6,13 @@ using System.Threading.Tasks;
 
 namespace Versioned_Memory
 {
-    class VersionedStack<T> : Versioned<T>
+    class VersionedStack<T> : Versioned<Stack<T>>
     {
         private Stack<T> myStack;
 
-        List<Revision> revisions;
-
         Revision mainRev;
 
-        internal SortedDictionary<int, Stack<T>> versions;
-
         public VersionedStack()
-            : base()
         {
             myStack = new Stack<T>();
 
@@ -57,31 +52,6 @@ namespace Versioned_Memory
         {
             Revision newRev = mainRev.Fork(delegate() { myStack.Clear(); Set(myStack); });
             newRev.Join(mainRev);
-        }
-
-        internal void Set(Stack<T> v) { Set(Revision.currentRevision.Value, v); } //добавляет стек в текущую ревизию
-
-        protected void Set(Revision r, Stack<T> value)
-        {
-            Stack<T> v;
-            if (versions.TryGetValue(r.current.version, out v) == false)
-            {
-                r.current.written.Add(this);
-            }
-            versions[r.current.version] = value;
-        }
-
-        internal Stack<T> Get() { return Get(Revision.currentRevision.Value); } //возвращает стек текущей ревизии
-
-        protected Stack<T> Get(Revision r)
-        {
-            Segment s = r.current;
-            Stack<T> value;
-            while (versions.TryGetValue(s.version, out value) == false)
-            {
-                s = s.parent;
-            }
-            return value;
         }
 
         public Stack<T> Elements() //dвозвращает весь стек

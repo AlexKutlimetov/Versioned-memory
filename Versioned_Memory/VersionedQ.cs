@@ -55,69 +55,12 @@ namespace Versioned_Memory
             newRev.Join(mainRev);
         }
 
-<<<<<<< HEAD
-        //internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); }
-
-        //protected void Set(Revision r, Queue<T> value)
-        //{
-        //    Queue<T> v;
-        //    if (versions.TryGetValue(r.current.version, out v) == false)
-        //    {
-        //        r.current.written.Add(this);
-        //    }
-        //    versions[r.current.version] = value;
-        //}
-
-        //internal Queue<T> Get() { return Get(Revision.currentRevision.Value); }
-
-        //protected Queue<T> Get(Revision r)
-        //{
-        //    Segment s = r.current;
-        //    Queue<T> value;
-        //    while (versions.TryGetValue(s.version, out value) == false)
-        //    {
-        //        s = s.parent;
-        //    }
-        //    return value;
-        //}
-=======
-        internal void Set(Queue<T> v) { Set(Revision.currentRevision.Value, v); } //добавляет очередь в текущую ревизию
-
-        protected void Set(Revision r, Queue<T> value)
-        {
-            Queue<T> v;
-            if (versions.TryGetValue(r.current.version, out v) == false)
-            {
-                r.current.written.Add(this);
-            }
-            versions[r.current.version] = value;
-        }
-
-        internal Queue<T> Get() { return Get(Revision.currentRevision.Value); } //возвращает очередь текущей ревизии, т.е. текущую версию
-
-        protected Queue<T> Get(Revision r) 
-        {
-            Segment s = r.current;
-            Queue<T> value;
-            while (versions.TryGetValue(s.version, out value) == false)
-            {
-                s = s.parent;
-            }
-            return value;
-        }
->>>>>>> origin/master
-
         public Queue<T> Elements() //возвращает всю очередь
         {
             return myQ;
         }
 
-<<<<<<< HEAD
-
         public void Enqueue(T item) //добавляет элемент в конец
-=======
-        public void Enqueue(T item)
->>>>>>> 6893d3ee9033ede67c411abe5ad6a90c19e63b79
         {
             Revision newRev = mainRev.Fork(delegate() { myQ.Enqueue(item); Set(myQ);});
             mainRev.Join(newRev);

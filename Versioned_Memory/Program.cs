@@ -232,7 +232,8 @@ namespace Versioned_Memory
     {
         static void Main(string[] args)
         {
-            VersionedBinaryTree<int> BTree = new VersionedBinaryTree<int>();
+            //VersionedBinaryTree<int> BTree = new VersionedBinaryTree<int>();
+            VersionedSplayTree<int> BTree = new VersionedSplayTree<int>();
 
             Random rnd = new Random((int)Stopwatch.GetTimestamp());
             Task t1 = Task.Factory.StartNew(() =>
